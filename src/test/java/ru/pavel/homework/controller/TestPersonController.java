@@ -4,7 +4,6 @@ import java.io.*;
 
 import org.junit.*;
 import org.junit.runner.*;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.test.context.*;
 import org.springframework.test.context.junit4.*;

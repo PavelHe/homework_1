@@ -30,7 +30,7 @@ public class PersonControllerImpl implements PersonController {
                 }
             }
             printFinalResults(person);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Not correct number!");
         }
     }
