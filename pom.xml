@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>homework_1</groupId>
-    <artifactId>homework_1</artifactId>
+    <groupId>com.github.pavelhe</groupId>
+    <artifactId>homework-1</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
