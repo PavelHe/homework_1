@@ -11,11 +11,11 @@
     <context:annotation-config/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-          p:location="classpath:props.properties" name="props">
+          p:location="file:src/test/resources/props.properties" name="props">
     </bean>
 
     <bean id="questionDao" class="ru.pavel.homework.dao.QuestionDaoImpl">
-        <property name="filePath" value="${filePath}"/>
+        <constructor-arg name="filePath" value="${filePath}"/>
     </bean>
 
     <bean id="questionService" class="ru.pavel.homework.service.QuestionServiceImpl">

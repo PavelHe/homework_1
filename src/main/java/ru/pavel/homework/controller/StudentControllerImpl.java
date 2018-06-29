@@ -3,32 +3,37 @@ package ru.pavel.homework.controller;
 import java.io.*;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
+import org.springframework.stereotype.*;
 import ru.pavel.homework.model.*;
 import ru.pavel.homework.service.*;
 
-
+@Service("studentControllerImpl")
 public class StudentControllerImpl implements StudentController {
 
+    @Autowired
+    private MessageSource messageSource;
     private final QuestionService questions;
+    private String defaultLocale;
 
-    public StudentControllerImpl(QuestionService questions) {
+    public StudentControllerImpl(@Qualifier("questionServiceImpl") QuestionService questions,
+                                 @Value("${defaultLocale}") String defaultLocale) {
         this.questions = questions;
+        this.defaultLocale = defaultLocale;
     }
 
     @Override
-    public Student startAnswers() {
-        return startAnswers(null);
-    }
+    public Student startAnswers(BufferedReader reader, Locale locale) {
+        reader = validateReader(reader);
+        locale = validateLocale(locale);
 
-    @Override
-    public Student startAnswers(BufferedReader reader) {
-        reader = validate(reader);
         List<Question> questionList = questions.getQuestionsFromCSV();
         Student student = null;
         try {
-            student = createStudent(reader);
+            student = createStudent(reader, locale);
             for (Question question : questionList) {
-                System.out.println("Chose right number of answer. Press number 1, 2 or 3 and press 'Enter' to next question.");
+                System.out.println(messageSource.getMessage("text.info", new Object[]{}, locale));
                 System.out.println(question.getText());
                 printAnswers(question.getAnswers());
                 int choseAnswer = Integer.parseInt(reader.readLine());
@@ -36,24 +41,24 @@ public class StudentControllerImpl implements StudentController {
                     student.setRightAnswers(student.getRightAnswers() + 1);
                 }
             }
-            printFinalResults(student);
+            printFinalResults(student, locale);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Not correct number!");
+            throw new IllegalArgumentException(messageSource.getMessage("error.ncNumber", new Object[]{}, locale));
         } finally {
             closeReader(reader);
         }
         return student;
     }
 
-    private Student createStudent(BufferedReader reader) {
+    private Student createStudent(BufferedReader reader, Locale locale) {
         Student student = null;
         try {
-            System.out.print("Hi! You'r name is: ");
+            System.out.print(messageSource.getMessage("text.askName", new Object[]{}, locale));
             String name = reader.readLine();
-            System.out.print("You'r surname is: ");
+            System.out.print(messageSource.getMessage("text.askSurname", new Object[]{}, locale));
             String surname = reader.readLine();
             student = new Student(name, surname);
-            System.out.println("====================================");
+            System.out.println(messageSource.getMessage("text.separator", new Object[]{}, locale));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -67,15 +72,23 @@ public class StudentControllerImpl implements StudentController {
         }
     }
 
-    private void printFinalResults(Student student) {
-        System.out.println(student.getName() + ", you'r correct answers is: " + student.getRightAnswers());
+    private void printFinalResults(Student student, Locale locale) {
+        System.out.println(messageSource.getMessage("text.result",
+                new Object[]{student.getName(), student.getRightAnswers()}, locale));
     }
 
-    private BufferedReader validate(BufferedReader reader) {
+    private BufferedReader validateReader(BufferedReader reader) {
         if (reader == null)
             reader = new BufferedReader(new InputStreamReader(System.in));
 
         return reader;
+    }
+
+    private Locale validateLocale(Locale locale) {
+        if (locale == null)
+            locale = Locale.forLanguageTag(defaultLocale);
+
+        return locale;
     }
 
     private void closeReader(BufferedReader reader) {

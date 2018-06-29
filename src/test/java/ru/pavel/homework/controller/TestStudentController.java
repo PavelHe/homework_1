@@ -7,6 +7,7 @@ import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.test.context.*;
 import org.springframework.test.context.junit4.*;
+import ru.pavel.homework.config.*;
 import ru.pavel.homework.model.*;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("file:src/test/resources/spring/context.xml")
+@ContextConfiguration(classes = TestConfiguration.class)
 public class TestStudentController {
 
     private final static String NAME = "Name";
@@ -27,13 +28,14 @@ public class TestStudentController {
 
 
     @Autowired
+    @Qualifier("testStudentController")
     private StudentController studentController;
 
     @Test
     public void testStartAnswer() throws Exception {
         BufferedReader mockReader = mock(BufferedReader.class);
         when(mockReader.readLine()).thenReturn(NAME, SURNAME, ANSWER_ONE, ANSWER_TWO, ANSWER_FREE, ANSWER_ONE, ANSWER_TWO, ANSWER_FREE);
-        Student student = studentController.startAnswers(mockReader);
+        Student student = studentController.startAnswers(mockReader, null);
 
         assertNotNull(student);
         assertEquals(NAME, student.getName());

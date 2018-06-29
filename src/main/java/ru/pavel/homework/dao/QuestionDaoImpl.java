@@ -4,14 +4,20 @@ import java.io.*;
 import java.util.*;
 
 import au.com.bytecode.opencsv.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 import ru.pavel.homework.model.*;
 
-
+@Service("questionDaoImpl")
 public class QuestionDaoImpl implements QuestionDao {
     private final static int QUESTION_TEXT = 1;
     private final static int RIGHT_ANSWER = 0;
 
     private String filePath;
+
+    public QuestionDaoImpl(@Value("${filePath}") String filePath) {
+        this.filePath = filePath;
+    }
 
     @Override
     public List<Question> getQuestionsFromCSV() {
