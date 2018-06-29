@@ -1,13 +1,13 @@
 package ru.pavel.homework.model;
 
 
-public class Person {
+public class Student {
 
     private final String name;
     private final String surname;
     private int rightAnswers;
 
-    public Person(String name, String surname) {
+    public Student(String name, String surname) {
         this.name = name;
         this.surname = surname;
         rightAnswers = 0;
@@ -34,10 +34,9 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Person person = (Person) o;
+        Student student = (Student) o;
 
-        if (name != null ? !name.equals(person.name) : person.name != null) return false;
-        return surname != null ? surname.equals(person.surname) : person.surname == null;
+        return (name != null ? name.equals(student.name) : student.name == null) && (surname != null ? surname.equals(student.surname) : student.surname == null);
     }
 
     @Override
@@ -49,7 +48,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Student{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", rightAnswers=" + rightAnswers +

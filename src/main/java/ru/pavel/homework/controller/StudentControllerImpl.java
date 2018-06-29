@@ -7,48 +7,57 @@ import ru.pavel.homework.model.*;
 import ru.pavel.homework.service.*;
 
 
-public class PersonControllerImpl implements PersonController {
+public class StudentControllerImpl implements StudentController {
 
-    private QuestionService questions;
+    private final QuestionService questions;
 
-    public PersonControllerImpl(QuestionService questions) {
+    public StudentControllerImpl(QuestionService questions) {
         this.questions = questions;
     }
 
     @Override
-    public void startAnswers() {
+    public Student startAnswers() {
+        return startAnswers(null);
+    }
+
+    @Override
+    public Student startAnswers(BufferedReader reader) {
+        reader = validate(reader);
         List<Question> questionList = questions.getQuestionsFromCSV();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            Person person = createPerson(reader);
+        Student student = null;
+        try {
+            student = createStudent(reader);
             for (Question question : questionList) {
                 System.out.println("Chose right number of answer. Press number 1, 2 or 3 and press 'Enter' to next question.");
                 System.out.println(question.getText());
                 printAnswers(question.getAnswers());
                 int choseAnswer = Integer.parseInt(reader.readLine());
                 if (choseAnswer == question.getRightAnswer()) {
-                    person.setRightAnswers(person.getRightAnswers() + 1);
+                    student.setRightAnswers(student.getRightAnswers() + 1);
                 }
             }
-            printFinalResults(person);
-        } catch (IOException e) {
+            printFinalResults(student);
+        } catch (Exception e) {
             throw new IllegalArgumentException("Not correct number!");
+        } finally {
+            closeReader(reader);
         }
+        return student;
     }
 
-    @Override
-    public Person createPerson(BufferedReader reader) {
-        Person person = null;
+    private Student createStudent(BufferedReader reader) {
+        Student student = null;
         try {
             System.out.print("Hi! You'r name is: ");
             String name = reader.readLine();
             System.out.print("You'r surname is: ");
             String surname = reader.readLine();
-            person = new Person(name, surname);
+            student = new Student(name, surname);
             System.out.println("====================================");
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
-        return person;
+        return student;
     }
 
     private void printAnswers(List<Answer> answers) {
@@ -58,7 +67,24 @@ public class PersonControllerImpl implements PersonController {
         }
     }
 
-    private void printFinalResults(Person person) {
-        System.out.println(person.getName() + ", you'r correct answers is: " + person.getRightAnswers());
+    private void printFinalResults(Student student) {
+        System.out.println(student.getName() + ", you'r correct answers is: " + student.getRightAnswers());
+    }
+
+    private BufferedReader validate(BufferedReader reader) {
+        if (reader == null)
+            reader = new BufferedReader(new InputStreamReader(System.in));
+
+        return reader;
+    }
+
+    private void closeReader(BufferedReader reader) {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

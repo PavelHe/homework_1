@@ -12,10 +12,10 @@ import ru.pavel.homework.model.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/spring/context.xml")
+@ContextConfiguration("file:src/test/resources/spring/context.xml")
 public class TestQuestionService {
 
-    private final static int ANSWERS_COUNT_IN_CSV = 5;
+    private final static int ANSWERS_COUNT_IN_CSV = 6;
 
     @Autowired
     private QuestionService service;

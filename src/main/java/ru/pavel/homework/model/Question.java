@@ -39,8 +39,7 @@ public class Question extends TextModel {
 
         Question question = (Question) o;
 
-        if (rightAnswer != question.rightAnswer) return false;
-        return text != null ? text.equals(question.text) : question.text == null;
+        return rightAnswer == question.rightAnswer && (text != null ? text.equals(question.text) : question.text == null);
     }
 
     @Override
