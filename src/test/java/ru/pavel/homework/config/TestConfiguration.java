@@ -12,8 +12,8 @@ import ru.pavel.homework.service.*;
 @PropertySource(value = {"file:src/test/resources/props.properties"}, name = "testProps")
 public class TestConfiguration {
 
-    private @Value("#{environment['testFilePath']}") String filePath;
-    private @Value("#{environment['testDefaultLocale']}") String defaultLocale;
+    private @Value("#{environment['filePathEn']}") String filePath;
+    private @Value("#{environment['defaultLocale']}") String defaultLocale;
 
     @Bean
     public StudentController testStudentController() {

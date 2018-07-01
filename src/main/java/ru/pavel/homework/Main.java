@@ -3,7 +3,6 @@ package ru.pavel.homework;
 import java.io.*;
 
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.*;
 import ru.pavel.homework.controller.*;
 
 @ComponentScan
@@ -16,5 +15,4 @@ public class Main {
         StudentController controller = (StudentController) context.getBean("studentControllerImpl");
         controller.startAnswers();
     }
-
 }

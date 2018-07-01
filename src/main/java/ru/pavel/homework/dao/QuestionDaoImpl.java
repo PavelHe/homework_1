@@ -15,12 +15,13 @@ public class QuestionDaoImpl implements QuestionDao {
 
     private String filePath;
 
-    public QuestionDaoImpl(@Value("${filePath}") String filePath) {
+    public QuestionDaoImpl(@Value("${filePathEn}") String filePath) {
         this.filePath = filePath;
     }
 
     @Override
     public List<Question> getQuestionsFromCSV() {
+        validateFilePath();
         List<Question> questions = new ArrayList<>();
         String[] line;
         try (CSVReader reader = new CSVReader(new FileReader(this.filePath), ',', '"', 1)) {
@@ -43,6 +44,18 @@ public class QuestionDaoImpl implements QuestionDao {
             answers.add(new Answer(text));
         }
         return answers;
+    }
+
+    private void validateFilePath() {
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getResourceAsStream("/props.properties"));
+            String defaultLocale = properties.getProperty("defaultLocale");
+            if (Objects.equals(defaultLocale, "ru"))
+                filePath = properties.getProperty("filePathRu");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setFilePath(String filePath) {
