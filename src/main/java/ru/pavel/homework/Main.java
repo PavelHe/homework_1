@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-        StudentController controller = (StudentController) context.getBean("studentControllerImpl");
+        StudentController controller = context.getBean(StudentController.class);
         controller.startAnswers();
     }
 }

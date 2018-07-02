@@ -7,7 +7,7 @@ import org.springframework.stereotype.*;
 import ru.pavel.homework.dao.*;
 import ru.pavel.homework.model.*;
 
-@Service("questionServiceImpl")
+@Service
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionDao questionDao;

@@ -4,16 +4,16 @@ import java.io.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.*;
 import org.springframework.stereotype.*;
 import ru.pavel.homework.model.*;
 import ru.pavel.homework.service.*;
+import ru.pavel.homework.utils.*;
 
-@Service("studentControllerImpl")
+@Service
 public class StudentControllerImpl implements StudentController {
 
     @Autowired
-    private MessageSource messageSource;
+    private MessageSourceWrapper messageSource;
     private final QuestionService questions;
     private String defaultLocale;
 
@@ -33,7 +33,7 @@ public class StudentControllerImpl implements StudentController {
         try {
             student = createStudent(reader, locale);
             for (Question question : questionList) {
-                System.out.println(messageSource.getMessage("text.info", new Object[]{}, locale));
+                System.out.println(messageSource.getMessage("text.info", locale));
                 System.out.println(question.getText());
                 printAnswers(question.getAnswers());
                 int choseAnswer = Integer.parseInt(reader.readLine());
@@ -43,7 +43,7 @@ public class StudentControllerImpl implements StudentController {
             }
             printFinalResults(student, locale);
         } catch (Exception e) {
-            throw new IllegalArgumentException(messageSource.getMessage("error.ncNumber", new Object[]{}, locale));
+            throw new IllegalArgumentException(messageSource.getMessage("error.ncNumber", locale));
         } finally {
             closeReader(reader);
         }
@@ -53,12 +53,12 @@ public class StudentControllerImpl implements StudentController {
     private Student createStudent(BufferedReader reader, Locale locale) {
         Student student = null;
         try {
-            System.out.print(messageSource.getMessage("text.askName", new Object[]{}, locale));
+            System.out.print(messageSource.getMessage("text.askName", locale));
             String name = reader.readLine();
-            System.out.print(messageSource.getMessage("text.askSurname", new Object[]{}, locale));
+            System.out.print(messageSource.getMessage("text.askSurname", locale));
             String surname = reader.readLine();
             student = new Student(name, surname);
-            System.out.println(messageSource.getMessage("text.separator", new Object[]{}, locale));
+            System.out.println(messageSource.getMessage("text.separator", locale));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -78,17 +78,11 @@ public class StudentControllerImpl implements StudentController {
     }
 
     private BufferedReader validateReader(BufferedReader reader) {
-        if (reader == null)
-            reader = new BufferedReader(new InputStreamReader(System.in));
-
-        return reader;
+        return reader == null ? new BufferedReader(new InputStreamReader(System.in)) : reader;
     }
 
     private Locale validateLocale(Locale locale) {
-        if (locale == null)
-            locale = Locale.forLanguageTag(defaultLocale);
-
-        return locale;
+        return locale == null ? Locale.forLanguageTag(defaultLocale) : locale;
     }
 
     private void closeReader(BufferedReader reader) {

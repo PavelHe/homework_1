@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import ru.pavel.homework.model.*;
 
-@Service("questionDaoImpl")
+@Service
 public class QuestionDaoImpl implements QuestionDao {
     private final static int QUESTION_TEXT = 1;
     private final static int RIGHT_ANSWER = 0;

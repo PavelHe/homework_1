@@ -7,6 +7,7 @@ import org.springframework.context.support.*;
 import ru.pavel.homework.controller.*;
 import ru.pavel.homework.dao.*;
 import ru.pavel.homework.service.*;
+import ru.pavel.homework.utils.*;
 
 @Configuration
 @PropertySource(value = {"file:src/test/resources/props.properties"}, name = "testProps")
@@ -36,6 +37,11 @@ public class TestConfiguration {
         ms.setBasename("locales/messages");
         ms.setDefaultEncoding("UTF-8");
         return ms;
+    }
+
+    @Bean
+    public MessageSourceWrapper messageSourceWrapper() {
+        return new MessageSourceWrapper(messageSource());
     }
 
 
